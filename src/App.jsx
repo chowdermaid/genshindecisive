@@ -10,6 +10,7 @@ function App() {
   const [contentIsOpened, setContentIsOpened] = React.useState(false);
   const [hero, setHero] = React.useState("");
   const [heroIsOpened, setHeroIsOpened] = React.useState(false);
+  const [submitIsOpened, setSubmitIsOpened] = React.useState(false);
 
   const howDesperate = (string) => {
     setDesperate(string);
@@ -26,6 +27,7 @@ function App() {
   const whichHero = (string) => {
     setHero(string);
     setHeroIsOpened((wasOpened) => !wasOpened);
+    setSubmitIsOpened((wasOpened) => !wasOpened);
   };
 
   const reset = () => {
@@ -35,7 +37,32 @@ function App() {
     setDesperateIsOpened(true);
     setContentIsOpened(false);
     setHeroIsOpened(false);
+    setSubmitIsOpened(false);
   };
+
+  const submitString = () => {
+    const oldJsonObject = JSON.parse(localStorage.getItem("events")) || [];
+    console.log(typeof oldJsonObject);
+    const jsonObject = {};
+    if (desperate == "really want to") {
+      jsonObject.weight = 8;
+    } else if (desperate == "want to") {
+      jsonObject.weight = 4;
+    } else if (desperate == "kind of want to") {
+      jsonObject.weight = 1;
+    }
+    jsonObject.event = content;
+    jsonObject.hero = hero;
+    console.log("json object", jsonObject);
+    oldJsonObject.push(jsonObject);
+    localStorage.setItem("events", JSON.stringify(oldJsonObject));
+  };
+
+  const localStorageClear = () => {
+    localStorage.clear();
+  };
+
+  React.useEffect(() => {}, []);
 
   return (
     <div className="App">
@@ -43,7 +70,6 @@ function App() {
       <p>
         I {desperate} {content} {hero}
       </p>
-
       {desperateIsOpened && (
         <div className="desperate">
           <button onClick={() => howDesperate("really want to")}>
@@ -55,7 +81,6 @@ function App() {
           </button>
         </div>
       )}
-
       {contentIsOpened && (
         <div className="content">
           <button onClick={() => whatContent("farm artifacts for")}>
@@ -75,13 +100,19 @@ function App() {
           </button>
         </div>
       )}
-
       {heroIsOpened && (
         <div className="hero">
           <button onClick={() => whichHero("Zhongli")}>Zhongli</button>
           <button onClick={() => whichHero("Tartaglia")}>Tartaglia</button>
         </div>
       )}
+      {submitIsOpened && (
+        <div className="submit">
+          <button onClick={submitString}>Submit</button>
+        </div>
+      )}
+      <button onClick={localStorageClear}>Clear local storage</button>
+      {localStorage.getItem("events")}
     </div>
   );
 }
