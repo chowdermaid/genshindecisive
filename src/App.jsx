@@ -11,6 +11,8 @@ function App() {
   const [hero, setHero] = React.useState("");
   const [heroIsOpened, setHeroIsOpened] = React.useState(false);
   const [submitIsOpened, setSubmitIsOpened] = React.useState(false);
+  const [pickedEvent, setPickedEvent] = React.useState("");
+  const [eventCard, setEventCard] = React.useState([]);
 
   const howDesperate = (string) => {
     setDesperate(string);
@@ -62,6 +64,11 @@ function App() {
     localStorage.clear();
   };
 
+  const getAllEvents = () => {
+    let data = JSON.parse(localStorage.getItem("events"));
+    setEventCard(data);
+  };
+
   const getRandomEvent = () => {
     let rngesus = [];
     let data = JSON.parse(localStorage.getItem("events"));
@@ -73,10 +80,19 @@ function App() {
       }
     }
     console.log("rngesus", rngesus);
-    console.log("result", rngesus[Math.floor(Math.random() * rngesus.length)]);
+    console.log("cum", rngesus[Math.floor(Math.random() * rngesus.length)]);
+    setPickedEvent(rngesus[Math.floor(Math.random() * rngesus.length)][0]);
   };
 
-  React.useEffect(() => {}, []);
+  const displayEvents = eventCard.map((data) => (
+    <div className="eventCard">
+      <p>{data.event + " " + data.hero}</p>
+    </div>
+  ));
+
+  React.useEffect(() => {
+    getAllEvents();
+  }, []);
 
   return (
     <div className="App">
@@ -127,9 +143,9 @@ function App() {
       )}
       <button onClick={localStorageClear}>Clear local storage</button>
       <br></br>
-      {localStorage.getItem("events")}
-      <br></br>
       <button onClick={getRandomEvent}>RNG GIVE ME AN EVENT</button>
+      {displayEvents}
+      <p>{pickedEvent}</p>
     </div>
   );
 }
