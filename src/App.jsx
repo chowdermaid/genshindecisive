@@ -62,6 +62,20 @@ function App() {
     localStorage.clear();
   };
 
+  const getRandomEvent = () => {
+    let rngesus = [];
+    let data = JSON.parse(localStorage.getItem("events"));
+    for (let i = 0; i < Object.keys(data).length; i++) {
+      for (let j = 0; j < data[i]["weight"]; j++) {
+        let eventInfo = data[i]["event"] + " " + data[i]["hero"];
+        let tempArray = [eventInfo, data[i]["weight"]];
+        rngesus.push(tempArray);
+      }
+    }
+    console.log("rngesus", rngesus);
+    console.log("result", rngesus[Math.floor(Math.random() * rngesus.length)]);
+  };
+
   React.useEffect(() => {}, []);
 
   return (
@@ -112,7 +126,10 @@ function App() {
         </div>
       )}
       <button onClick={localStorageClear}>Clear local storage</button>
+      <br></br>
       {localStorage.getItem("events")}
+      <br></br>
+      <button onClick={getRandomEvent}>RNG GIVE ME AN EVENT</button>
     </div>
   );
 }
